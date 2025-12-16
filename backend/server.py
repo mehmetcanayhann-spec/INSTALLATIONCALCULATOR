@@ -68,6 +68,7 @@ class CostBreakdown(BaseModel):
     tools_cost: float
     supervision_cost: float
     flight_ticket: float
+    ground_fixing_screws: float
     raw_total: float
     rate_per_meter: float
     markup_30: float
