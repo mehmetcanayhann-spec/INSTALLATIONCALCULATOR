@@ -105,11 +105,15 @@ const Home = () => {
       
       <header className="bg-slate-900 border-b-2 border-slate-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <div className="flex items-center gap-3">
-            <Calculator className="w-8 h-8 text-amber-500" />
-            <div>
+          <div className="flex items-center gap-4">
+            <img 
+              src="https://customer-assets.emergentagent.com/job_meter-price-tool/artifacts/a3m47d7y_NEW%20LOGO.png" 
+              alt="Duracost Logo" 
+              className="h-12 sm:h-16 w-auto"
+            />
+            <div className="border-l-2 border-slate-700 pl-4">
               <h1 className="font-heading text-2xl sm:text-3xl font-black text-white tracking-tight">
-                Racing Fence Installation Pricing
+                Installation Pricing Calculator
               </h1>
               <p className="text-slate-400 text-sm mt-1">Calculate installation costs per meter</p>
             </div>
