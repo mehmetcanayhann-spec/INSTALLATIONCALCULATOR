@@ -1,0 +1,43 @@
+{
+  "timestamp": "2025-12-16T07:23:17.455796",
+  "total_tests": 7,
+  "passed_tests": 7,
+  "success_rate": 100.0,
+  "results": [
+    {
+      "test": "Root API Endpoint",
+      "success": true,
+      "details": "Status: 200"
+    },
+    {
+      "test": "Countries Endpoint",
+      "success": true,
+      "details": "Status: 200, Countries count: 30"
+    },
+    {
+      "test": "Calculate OR Fence",
+      "success": true,
+      "details": "Work days: 4.0 (expected: 4.0), Labor: \u00a36251.52 (expected: \u00a36251.52)"
+    },
+    {
+      "test": "Calculate PR Fence",
+      "success": true,
+      "details": "Work days: 3.5 (expected: 3.5)"
+    },
+    {
+      "test": "Zero Min Wage Country (Sweden)",
+      "success": true,
+      "details": "Labor cost: \u00a33840.0 (expected: \u00a33840.0)"
+    },
+    {
+      "test": "Invalid Country Handling",
+      "success": true,
+      "details": "Status: 400"
+    },
+    {
+      "test": "Calculations Archive",
+      "success": true,
+      "details": "Status: 200, Records: 4"
+    }
+  ]
+}
