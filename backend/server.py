@@ -131,6 +131,7 @@ async def calculate_price(request: CalculationRequest):
     total_supervision_cost = supervision_daily
     
     raw_total = total_labor_cost + total_tools_cost + total_supervision_cost + flight_ticket
+    rate_per_meter = raw_total / request.meters
     
     breakdown = CostBreakdown(
         work_days=float(total_work_days),
@@ -139,6 +140,7 @@ async def calculate_price(request: CalculationRequest):
         supervision_cost=round(total_supervision_cost, 2),
         flight_ticket=flight_ticket,
         raw_total=round(raw_total, 2),
+        rate_per_meter=round(rate_per_meter, 2),
         markup_30=round(raw_total * 1.30, 2),
         markup_40=round(raw_total * 1.40, 2),
         markup_50=round(raw_total * 1.50, 2),
