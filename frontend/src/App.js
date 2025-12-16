@@ -303,9 +303,13 @@ const Home = () => {
                   <Separator className="my-4" />
 
                   <div className="bg-slate-100 rounded-sm p-4 mb-6">
-                    <div className="flex justify-between items-center">
+                    <div className="flex justify-between items-center mb-2">
                       <span className="font-heading text-lg font-bold text-slate-900">Raw Total:</span>
                       <span data-testid="raw-total" className="font-mono text-2xl font-bold text-slate-900">£{result.breakdown.raw_total.toFixed(2)}</span>
+                    </div>
+                    <div className="flex justify-between items-center border-t border-slate-300 pt-2">
+                      <span className="text-sm text-slate-600">Rate per Meter:</span>
+                      <span data-testid="rate-per-meter" className="font-mono font-bold text-amber-600">£{result.breakdown.rate_per_meter.toFixed(2)}/m</span>
                     </div>
                   </div>
 
