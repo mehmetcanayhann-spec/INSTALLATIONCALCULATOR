@@ -172,20 +172,30 @@ const Home = ({ onLogout }) => {
       
       <header className="bg-[#2D4A2B] border-b-2 border-[#234520]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <div className="flex items-center gap-4">
-            <div className="bg-white px-3 py-2 rounded-sm">
-              <img 
-                src="https://customer-assets.emergentagent.com/job_meter-price-tool/artifacts/a3m47d7y_NEW%20LOGO.png" 
-                alt="Duralock Logo" 
-                className="h-10 sm:h-12 w-auto"
-              />
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <div className="bg-white px-3 py-2 rounded-sm">
+                <img 
+                  src="https://customer-assets.emergentagent.com/job_meter-price-tool/artifacts/a3m47d7y_NEW%20LOGO.png" 
+                  alt="Duralock Logo" 
+                  className="h-10 sm:h-12 w-auto"
+                />
+              </div>
+              <div>
+                <h1 className="font-heading text-2xl sm:text-3xl font-black text-white tracking-tight">
+                  Duracost - Installation
+                </h1>
+                <p className="text-slate-200 text-sm mt-1">Calculate installation costs per meter</p>
+              </div>
             </div>
-            <div>
-              <h1 className="font-heading text-2xl sm:text-3xl font-black text-white tracking-tight">
-                Duracost - Installation
-              </h1>
-              <p className="text-slate-200 text-sm mt-1">Calculate installation costs per meter</p>
-            </div>
+            <Button
+              onClick={onLogout}
+              data-testid="logout-button"
+              variant="outline"
+              className="rounded-sm border-2 border-white text-white hover:bg-white hover:text-[#2D4A2B] transition-all duration-150"
+            >
+              Logout
+            </Button>
           </div>
         </div>
       </header>
