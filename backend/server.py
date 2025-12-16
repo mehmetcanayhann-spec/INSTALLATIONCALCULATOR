@@ -131,7 +131,9 @@ async def calculate_price(request: CalculationRequest):
     flight_ticket = 500
     total_supervision_cost = supervision_daily
     
-    raw_total = total_labor_cost + total_tools_cost + total_supervision_cost + flight_ticket
+    ground_fixing_screws_cost = request.meters * 1.5
+    
+    raw_total = total_labor_cost + total_tools_cost + total_supervision_cost + flight_ticket + ground_fixing_screws_cost
     rate_per_meter = raw_total / request.meters
     
     breakdown = CostBreakdown(
@@ -140,6 +142,7 @@ async def calculate_price(request: CalculationRequest):
         tools_cost=round(total_tools_cost, 2),
         supervision_cost=round(total_supervision_cost, 2),
         flight_ticket=flight_ticket,
+        ground_fixing_screws=round(ground_fixing_screws_cost, 2),
         raw_total=round(raw_total, 2),
         rate_per_meter=round(rate_per_meter, 2),
         markup_30=round(raw_total * 1.30, 2),
