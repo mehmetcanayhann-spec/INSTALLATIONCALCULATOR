@@ -298,6 +298,10 @@ const Home = () => {
                       <span className="text-sm text-slate-600">Flight Ticket:</span>
                       <span className="font-mono font-medium text-slate-900">£{result.breakdown.flight_ticket.toFixed(2)}</span>
                     </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm text-slate-600">Ground Fixing Screws:</span>
+                      <span className="font-mono font-medium text-slate-900">£{result.breakdown.ground_fixing_screws.toFixed(2)}</span>
+                    </div>
                   </div>
 
                   <Separator className="my-4" />
