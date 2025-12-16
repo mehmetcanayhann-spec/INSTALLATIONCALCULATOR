@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import "@/App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import axios from "axios";
-import { Calculator } from "lucide-react";
+import { Calculator, Lock } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -13,6 +13,73 @@ import { toast, Toaster } from "sonner";
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
+const CORRECT_PASSWORD = "DFS_1991..";
+
+const Login = ({ onLogin }) => {
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState(false);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (password === CORRECT_PASSWORD) {
+      localStorage.setItem("duracost_auth", "true");
+      onLogin();
+      toast.success("Access granted!");
+    } else {
+      setError(true);
+      toast.error("Incorrect password");
+      setPassword("");
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
+      <Card className="w-full max-w-md p-8 rounded-sm border-2 border-slate-300">
+        <div className="text-center mb-8">
+          <div className="inline-flex items-center justify-center w-16 h-16 bg-[#2D4A2B] rounded-sm mb-4">
+            <Lock className="w-8 h-8 text-white" />
+          </div>
+          <h1 className="font-heading text-2xl font-bold text-slate-900 mb-2">
+            Duracost - Installation
+          </h1>
+          <p className="text-slate-600 text-sm">Enter password to access the calculator</p>
+        </div>
+        
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <Label htmlFor="password" className="text-sm font-medium text-slate-700 mb-2 block">
+              Password
+            </Label>
+            <Input
+              id="password"
+              type="password"
+              data-testid="password-input"
+              placeholder="Enter password"
+              value={password}
+              onChange={(e) => {
+                setPassword(e.target.value);
+                setError(false);
+              }}
+              className={`rounded-sm border-2 ${error ? 'border-red-500' : 'border-slate-300'} focus:border-amber-500 focus:ring-0 bg-white`}
+              autoFocus
+            />
+            {error && (
+              <p className="text-red-500 text-sm mt-1">Incorrect password. Please try again.</p>
+            )}
+          </div>
+          
+          <Button
+            type="submit"
+            data-testid="login-button"
+            className="w-full rounded-sm border-2 border-slate-900 bg-slate-900 text-white hover:bg-slate-800 shadow-none hover:shadow-[2px_2px_0px_0px_rgba(15,23,42,1)] transition-all duration-150 font-medium"
+          >
+            Access Calculator
+          </Button>
+        </form>
+      </Card>
+    </div>
+  );
+};
 
 const Home = () => {
   const [countries, setCountries] = useState([]);
