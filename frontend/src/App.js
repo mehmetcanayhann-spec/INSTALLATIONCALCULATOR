@@ -106,11 +106,23 @@ const Home = () => {
       <header className="bg-[#2D4A2B] border-b-2 border-[#234520]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex items-center gap-4">
-            <img 
-              src="https://customer-assets.emergentagent.com/job_meter-price-tool/artifacts/a3m47d7y_NEW%20LOGO.png" 
-              alt="Duracost Logo" 
-              className="h-12 sm:h-16 w-auto brightness-0 invert"
-            />
+            <div className="flex items-center">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 150" className="h-12 sm:h-14 w-auto">
+                <text x="10" y="80" fontFamily="Arial, sans-serif" fontSize="65" fontWeight="900" fill="white" letterSpacing="-2">
+                  DURAL
+                  <tspan fontSize="65" fontWeight="900">
+                    <tspan>O</tspan>
+                    <tspan dx="-8">O</tspan>
+                  </tspan>
+                  <tspan>CK</tspan>
+                </text>
+                <line x1="10" y1="100" x2="140" y2="100" stroke="white" strokeWidth="3"/>
+                <text x="60" y="130" fontFamily="Arial, sans-serif" fontSize="28" fontWeight="400" fill="white" letterSpacing="2">
+                  GROUP
+                </text>
+                <line x1="10" y1="140" x2="140" y2="140" stroke="white" strokeWidth="3"/>
+              </svg>
+            </div>
             <div>
               <h1 className="font-heading text-2xl sm:text-3xl font-black text-white tracking-tight">
                 Duracost - Installation
