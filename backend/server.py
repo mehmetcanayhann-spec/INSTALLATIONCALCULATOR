@@ -69,6 +69,7 @@ class CostBreakdown(BaseModel):
     supervision_cost: float
     flight_ticket: float
     raw_total: float
+    rate_per_meter: float
     markup_30: float
     markup_40: float
     markup_50: float
