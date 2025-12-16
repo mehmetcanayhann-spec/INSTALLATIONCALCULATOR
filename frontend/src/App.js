@@ -375,7 +375,7 @@ const Home = () => {
                 <tbody className="divide-y divide-slate-200">
                   {calculations.length === 0 ? (
                     <tr>
-                      <td colSpan="8" className="px-4 py-8 text-center text-sm text-slate-500">
+                      <td colSpan="9" className="px-4 py-8 text-center text-sm text-slate-500">
                         No calculations yet. Create your first one above!
                       </td>
                     </tr>
@@ -389,6 +389,7 @@ const Home = () => {
                         <td className="px-4 py-3 text-sm font-mono text-right text-slate-700">{calc.meters}m</td>
                         <td className="px-4 py-3 text-sm font-mono text-right text-slate-700">{calc.gates}</td>
                         <td className="px-4 py-3 text-sm font-mono text-right font-medium text-slate-900">£{calc.breakdown.raw_total.toFixed(2)}</td>
+                        <td className="px-4 py-3 text-sm font-mono text-right font-medium text-amber-600">£{calc.breakdown.rate_per_meter.toFixed(2)}</td>
                         <td className="px-4 py-3 text-sm text-slate-600">{new Date(calc.timestamp).toLocaleDateString()}</td>
                       </tr>
                     ))
