@@ -161,8 +161,12 @@ const Home = ({ onLogout }) => {
     
     try {
       await axios.post(`${API}/archive`, result);
-      fetchCalculations();
       toast.success("Calculation archived successfully!");
+      
+      // Wait a moment then refresh the archive list
+      setTimeout(() => {
+        fetchCalculations();
+      }, 500);
     } catch (error) {
       console.error("Error archiving:", error);
       toast.error("Failed to archive calculation");
