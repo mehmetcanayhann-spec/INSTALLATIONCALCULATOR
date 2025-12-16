@@ -140,6 +140,7 @@ async def calculate_price(request: CalculationRequest):
     
     breakdown = CostBreakdown(
         work_days=float(total_work_days),
+        daily_rate_per_man=round(daily_rate_per_man, 2),
         labor_cost=round(total_labor_cost, 2),
         tools_cost=round(total_tools_cost, 2),
         supervision_cost=round(total_supervision_cost, 2),
