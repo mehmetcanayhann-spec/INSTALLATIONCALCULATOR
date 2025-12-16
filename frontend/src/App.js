@@ -417,7 +417,7 @@ const Home = ({ onLogout }) => {
                     Markup Options
                   </h3>
                   
-                  <div className="space-y-2">
+                  <div className="space-y-2 mb-6">
                     <div className="flex justify-between items-center bg-amber-50 border-2 border-amber-200 rounded-sm p-3">
                       <span className="text-sm font-medium text-slate-900">+30% Markup:</span>
                       <span data-testid="markup-30" className="font-mono font-bold text-amber-700">£{result.breakdown.markup_30.toFixed(2)}</span>
@@ -435,6 +435,14 @@ const Home = ({ onLogout }) => {
                       <span data-testid="markup-60" className="font-mono font-bold text-emerald-700">£{result.breakdown.markup_60.toFixed(2)}</span>
                     </div>
                   </div>
+
+                  <Button
+                    onClick={handleArchive}
+                    data-testid="archive-button"
+                    className="w-full rounded-sm border-2 border-emerald-600 bg-emerald-600 text-white hover:bg-emerald-700 shadow-none hover:shadow-[2px_2px_0px_0px_rgba(5,150,105,1)] transition-all duration-150 font-medium"
+                  >
+                    Archive This Calculation
+                  </Button>
                 </div>
               </Card>
             ) : (
