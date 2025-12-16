@@ -121,7 +121,8 @@ async def calculate_price(request: CalculationRequest):
     total_work_days = math.ceil(total_work_days_calculated)
     
     hourly_labor_rate = 2 * min_wage
-    daily_labor_cost = 8 * hourly_labor_rate * 8
+    daily_rate_per_man = hourly_labor_rate * 8
+    daily_labor_cost = 8 * daily_rate_per_man
     total_labor_cost = daily_labor_cost * total_work_days
     
     tools_base = 200
