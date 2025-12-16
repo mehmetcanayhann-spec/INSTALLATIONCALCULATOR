@@ -113,7 +113,9 @@ async def calculate_price(request: CalculationRequest):
     fence_days = request.meters / daily_capacity
     gate_days = request.gates * 0.25
     setup_cleanup_days = 1
-    total_work_days = fence_days + gate_days + setup_cleanup_days
+    total_work_days_calculated = fence_days + gate_days + setup_cleanup_days
+    
+    total_work_days = math.ceil(total_work_days_calculated)
     
     hourly_labor_rate = 2 * min_wage
     daily_labor_cost = 8 * hourly_labor_rate * 8
@@ -130,7 +132,7 @@ async def calculate_price(request: CalculationRequest):
     raw_total = total_labor_cost + total_tools_cost + total_supervision_cost + flight_ticket
     
     breakdown = CostBreakdown(
-        work_days=round(total_work_days, 2),
+        work_days=float(total_work_days),
         labor_cost=round(total_labor_cost, 2),
         tools_cost=round(total_tools_cost, 2),
         supervision_cost=round(total_supervision_cost, 2),
