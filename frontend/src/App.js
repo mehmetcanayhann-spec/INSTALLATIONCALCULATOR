@@ -389,7 +389,9 @@ const Home = () => {
                         <td className="px-4 py-3 text-sm font-mono text-right text-slate-700">{calc.meters}m</td>
                         <td className="px-4 py-3 text-sm font-mono text-right text-slate-700">{calc.gates}</td>
                         <td className="px-4 py-3 text-sm font-mono text-right font-medium text-slate-900">£{calc.breakdown.raw_total.toFixed(2)}</td>
-                        <td className="px-4 py-3 text-sm font-mono text-right font-medium text-amber-600">£{calc.breakdown.rate_per_meter.toFixed(2)}</td>
+                        <td className="px-4 py-3 text-sm font-mono text-right font-medium text-amber-600">
+                          £{calc.breakdown.rate_per_meter ? calc.breakdown.rate_per_meter.toFixed(2) : (calc.breakdown.raw_total / calc.meters).toFixed(2)}
+                        </td>
                         <td className="px-4 py-3 text-sm text-slate-600">{new Date(calc.timestamp).toLocaleDateString()}</td>
                       </tr>
                     ))
