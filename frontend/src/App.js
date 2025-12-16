@@ -134,23 +134,38 @@ const Home = ({ onLogout }) => {
 
     setLoading(true);
     try {
-      const response = await axios.post(`${API}/calculate`, {
+      const calculationData = {
         user_name: formData.user_name,
         project_name: formData.project_name,
         country: formData.country,
         fence_type: formData.fence_type,
         meters: parseFloat(formData.meters),
         gates: parseInt(formData.gates)
-      });
+      };
+      
+      // Calculate without saving to database
+      const response = await axios.post(`${API}/calculate-preview`, calculationData);
       
       setResult(response.data.calculation);
-      fetchCalculations();
       toast.success("Calculation completed!");
     } catch (error) {
       console.error("Error calculating:", error);
       toast.error("Failed to calculate price");
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleArchive = async () => {
+    if (!result) return;
+    
+    try {
+      await axios.post(`${API}/archive`, result);
+      fetchCalculations();
+      toast.success("Calculation archived successfully!");
+    } catch (error) {
+      console.error("Error archiving:", error);
+      toast.error("Failed to archive calculation");
     }
   };
 
