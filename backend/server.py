@@ -64,6 +64,7 @@ class CalculationRequest(BaseModel):
 
 class CostBreakdown(BaseModel):
     work_days: float
+    daily_rate_per_man: float
     labor_cost: float
     tools_cost: float
     supervision_cost: float
