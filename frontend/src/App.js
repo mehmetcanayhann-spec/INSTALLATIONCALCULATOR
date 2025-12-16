@@ -488,11 +488,39 @@ const Home = ({ onLogout }) => {
 };
 
 function App() {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  useEffect(() => {
+    const auth = localStorage.getItem("duracost_auth");
+    if (auth === "true") {
+      setIsAuthenticated(true);
+    }
+  }, []);
+
+  const handleLogin = () => {
+    setIsAuthenticated(true);
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem("duracost_auth");
+    setIsAuthenticated(false);
+    toast.success("Logged out successfully");
+  };
+
+  if (!isAuthenticated) {
+    return (
+      <div className="App">
+        <Toaster position="top-right" />
+        <Login onLogin={handleLogin} />
+      </div>
+    );
+  }
+
   return (
     <div className="App">
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route path="/" element={<Home onLogout={handleLogout} />} />
         </Routes>
       </BrowserRouter>
     </div>
