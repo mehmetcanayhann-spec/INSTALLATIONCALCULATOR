@@ -512,7 +512,7 @@ const Home = ({ onLogout }) => {
                           <td className="px-4 py-3 text-sm text-slate-600">{new Date(calc.timestamp).toLocaleDateString()}</td>
                         </tr>
                       );
-                    }))
+                    })
                   )}
                 </tbody>
               </table>
