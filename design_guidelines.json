@@ -1,0 +1,140 @@
+{
+  "identity": {
+    "persona": "E1: The Anti-AI Designer",
+    "mission": "Create a 'Digital Surveyor' tool that feels like a precision instrument, not a generic SaaS form.",
+    "principles": [
+      "Fusion: Industrial Blueprint x Swiss Typography",
+      "Emotion: Precision, Reliability, Authority",
+      "Content: Data is the hero. Numbers must be monospaced and prominent.",
+      "Contrast: High contrast for field visibility (sunlight readability)."
+    ]
+  },
+  "typography": {
+    "headings": {
+      "family": "Chivo, sans-serif",
+      "usage": "Section headers, Project titles",
+      "weights": ["700", "900"],
+      "tracking": "tracking-tight"
+    },
+    "body": {
+      "family": "Inter, sans-serif",
+      "usage": "Labels, instructions",
+      "weights": ["400", "500"]
+    },
+    "data": {
+      "family": "JetBrains Mono, monospace",
+      "usage": "All prices, measurements, calculations, dates",
+      "weights": ["500"],
+      "className": "font-mono tabular-nums"
+    }
+  },
+  "colors": {
+    "palette": {
+      "primary": "#0F172A",
+      "secondary": "#F59E0B",
+      "accent": "#10B981",
+      "background": "#F8FAFC",
+      "surface": "#FFFFFF",
+      "border": "#E2E8F0",
+      "text": "#1E293B",
+      "muted": "#64748B"
+    },
+    "usage": {
+      "primary": "Main headers, primary buttons, active states",
+      "secondary": "Warnings, 'Markup' highlights, important data points",
+      "accent": "Success states, 'Profit' indicators",
+      "background": "Global app background (Slate-50)",
+      "surface": "Card backgrounds, Input fields"
+    },
+    "theme_strategy": "Light Mode Default (Field Optimized). High contrast text against light backgrounds."
+  },
+  "visual_enhancers": {
+    "textures": [
+      "Subtle grid pattern (20px x 20px) on the 'Result/Invoice' section to mimic engineering paper.",
+      "Dashed borders for 'estimated' or 'future' values."
+    ],
+    "borders": "Sharp or minimal radius (rounded-sm). Thicker borders (2px) on active inputs.",
+    "shadows": "Hard shadows (shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]) for buttons to give a tactile, mechanical feel."
+  },
+  "layout": {
+    "structure": "Split Screen (Desktop) / Stacked (Mobile)",
+    "grid_system": "The Control Room Grid (Mode B)",
+    "sections": {
+      "input_panel": "Left/Top. Dense, functional, form-heavy. Darker or distinct background.",
+      "result_panel": "Right/Bottom. Visual, spacious, looks like a printed invoice/spec sheet.",
+      "archive_list": "Drawer or separate section below. Table format with monospaced data."
+    },
+    "spacing": "Compact in the form (gap-4), Spacious in the results (p-8)."
+  },
+  "components": {
+    "buttons": {
+      "style": "Neo-Brutalist. Sharp corners, 2px border, hard shadow on hover.",
+      "classes": "rounded-sm border-2 border-slate-900 shadow-none hover:shadow-[2px_2px_0px_0px_rgba(15,23,42,1)] transition-all"
+    },
+    "inputs": {
+      "style": "High contrast, clear focus state.",
+      "classes": "rounded-sm border-slate-300 focus:border-amber-500 focus:ring-0 bg-white"
+    },
+    "cards": {
+      "style": "Flat, bordered, technical.",
+      "classes": "rounded-sm border border-slate-200 bg-white shadow-sm"
+    },
+    "markup_selector": {
+      "style": "Segmented Control / Toggle Group. Looks like a machine switch.",
+      "classes": "bg-slate-100 p-1 rounded-md"
+    }
+  },
+  "motion": {
+    "type": "Mechanical & Snappy",
+    "duration": "duration-150",
+    "easing": "ease-out",
+    "interactions": [
+      "Buttons press down (translate-y) on click.",
+      "Numbers 'roll' or tick up when calculating (if possible, otherwise instant update).",
+      "Results panel slides in from right on mobile."
+    ]
+  },
+  "images": {
+    "hero": {
+      "url": "https://images.unsplash.com/photo-1759063916119-e9302f91419d",
+      "alt": "Racing fence context",
+      "usage": "Subtle background overlay or login/welcome screen header"
+    },
+    "context": {
+      "url": "https://images.pexels.com/photos/8470774/pexels-photo-8470774.jpeg",
+      "alt": "Construction worker measuring",
+      "usage": "Empty state for Archive or 'About' modal"
+    },
+    "texture": {
+      "url": "https://images.pexels.com/photos/7937313/pexels-photo-7937313.jpeg",
+      "alt": "Blueprints",
+      "usage": "Background texture for the calculation summary card (low opacity)"
+    }
+  },
+  "instructions_to_main_agent": [
+    "1. INSTALL FONTS: Add '@fontsource/chivo' and '@fontsource/jetbrains-mono' to package.json immediately.",
+    "2. SETUP TAILWIND: Configure the font families in tailwind.config.js to use Chivo for sans and JetBrains Mono for mono.",
+    "3. COMPONENT OVERRIDE: Do not use default rounded-xl Shadcn radius. Force 'rounded-sm' or 'rounded-none' for a technical look.",
+    "4. DATA FORMATTING: All currency (£) and measurements (m) MUST use the mono font.",
+    "5. ARCHIVE: The archive list should look like a data table or a logbook, not a card grid.",
+    "6. CALCULATOR LOGIC: Ensure the math is precise. 8 workers * (2 * min_wage) is the labor cost formula. Don't forget the flight ticket (£500) is a flat fee added to supervision.",
+    "7. MARKUP: The markup is applied to the TOTAL raw cost. Display both Raw and Final Price clearly."
+  ],
+  "universal_guidelines": [
+    "Dark colors look good when used independently without gradients. DO NOT use dark colors as gradients",
+    "Don't make generic centered layouts, simplistic gradients, and uniform styling.",
+    "Create depth through layered design elements with z-index hierarchy",
+    "Use glass-morphism effects with backdrop filters (12-24px blur)",
+    "You MUST NOT apply universal transition. Eg: transition: all. This results in breaking transforms. Always add transitions for specific interactive elements like button, input excluding transforms",
+    "You MUST NOT center align the app container, ie do not add .App { text-align: center; } in the css file. This disrupts the human natural reading flow of text",
+    "Always use modern button styles like pill-shaped, or sharp button with interaction animations & color relevant to the app style",
+    "NEVER: use AI assistant Emoji characters like 🤖🧠 etc for icons.",
+    "Every interaction needs micro-animations - hover states, transitions, parallax effects, and entrance animations. Static = dead.",
+    "Use 2-3x more spacing than feels comfortable. Cramped designs look cheap.",
+    "Subtle grain textures, noise overlays, custom cursors, selection states, and loading animations: separates good from extraordinary.",
+    "Prioritize using pre-existing components from src/components/ui when applicable",
+    "Components MUST use named exports (export const ComponentName = ...)",
+    "Pages MUST use default exports (export default function PageName() {...})",
+    "Use sonner for toasts"
+  ]
+}
