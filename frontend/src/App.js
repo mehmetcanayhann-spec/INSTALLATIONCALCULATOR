@@ -115,6 +115,7 @@ const Home = ({ onLogout }) => {
   const fetchCalculations = async () => {
     try {
       const response = await axios.get(`${API}/calculations`);
+      console.log("Fetched calculations:", response.data);
       setCalculations(response.data);
     } catch (error) {
       console.error("Error fetching calculations:", error);
