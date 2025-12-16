@@ -101,8 +101,8 @@ async def root():
 async def get_countries():
     return {"countries": sorted(list(COUNTRY_MIN_WAGES.keys()))}
 
-@api_router.post("/calculate", response_model=CalculationResponse)
-async def calculate_price(request: CalculationRequest):
+def calculate_pricing(request: CalculationRequest):
+    """Helper function to calculate pricing without saving to database"""
     if request.country not in COUNTRY_MIN_WAGES:
         raise HTTPException(status_code=400, detail="Invalid country selected")
     
@@ -164,6 +164,17 @@ async def calculate_price(request: CalculationRequest):
         breakdown=breakdown
     )
     
+    return calculation
+
+@api_router.post("/calculate-preview", response_model=CalculationResponse)
+async def calculate_preview(request: CalculationRequest):
+    """Calculate pricing without saving to database"""
+    calculation = calculate_pricing(request)
+    return {"calculation": calculation}
+
+@api_router.post("/archive", response_model=CalculationResponse)
+async def archive_calculation(calculation: Calculation):
+    """Save calculation to archive"""
     doc = calculation.model_dump()
     doc['timestamp'] = doc['timestamp'].isoformat()
     
