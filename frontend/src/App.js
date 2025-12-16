@@ -368,6 +368,7 @@ const Home = () => {
                     <th className="px-4 py-3 text-right text-xs font-bold text-white uppercase tracking-wide">Meters</th>
                     <th className="px-4 py-3 text-right text-xs font-bold text-white uppercase tracking-wide">Gates</th>
                     <th className="px-4 py-3 text-right text-xs font-bold text-white uppercase tracking-wide">Raw Total</th>
+                    <th className="px-4 py-3 text-right text-xs font-bold text-white uppercase tracking-wide">£/m</th>
                     <th className="px-4 py-3 text-left text-xs font-bold text-white uppercase tracking-wide">Date</th>
                   </tr>
                 </thead>
