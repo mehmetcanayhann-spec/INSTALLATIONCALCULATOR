@@ -465,21 +465,31 @@ const Home = ({ onLogout }) => {
                       </td>
                     </tr>
                   ) : (
-                    calculations.map((calc) => (
-                      <tr key={calc.id} data-testid="archive-row" className="hover:bg-slate-50 transition-colors duration-150">
-                        <td className="px-4 py-3 text-sm text-slate-900 font-medium">{calc.user_name}</td>
-                        <td className="px-4 py-3 text-sm text-slate-900">{calc.project_name}</td>
-                        <td className="px-4 py-3 text-sm text-slate-700">{calc.country}</td>
-                        <td className="px-4 py-3 text-sm font-mono text-slate-700">{calc.fence_type}</td>
-                        <td className="px-4 py-3 text-sm font-mono text-right text-slate-700">{calc.meters}m</td>
-                        <td className="px-4 py-3 text-sm font-mono text-right text-slate-700">{calc.gates}</td>
-                        <td className="px-4 py-3 text-sm font-mono text-right font-medium text-slate-900">£{calc.breakdown.raw_total.toFixed(2)}</td>
-                        <td className="px-4 py-3 text-sm font-mono text-right font-medium text-amber-600">
-                          £{calc.breakdown.rate_per_meter ? calc.breakdown.rate_per_meter.toFixed(2) : (calc.breakdown.raw_total / calc.meters).toFixed(2)}
-                        </td>
-                        <td className="px-4 py-3 text-sm text-slate-600">{new Date(calc.timestamp).toLocaleDateString()}</td>
-                      </tr>
-                    ))
+                    calculations.map((calc) => {
+                      const ratePerMeter = calc.breakdown?.rate_per_meter 
+                        ? calc.breakdown.rate_per_meter.toFixed(2) 
+                        : (calc.breakdown?.raw_total && calc.meters 
+                          ? (calc.breakdown.raw_total / calc.meters).toFixed(2) 
+                          : "N/A");
+                      
+                      return (
+                        <tr key={calc.id} data-testid="archive-row" className="hover:bg-slate-50 transition-colors duration-150">
+                          <td className="px-4 py-3 text-sm text-slate-900 font-medium">{calc.user_name}</td>
+                          <td className="px-4 py-3 text-sm text-slate-900">{calc.project_name}</td>
+                          <td className="px-4 py-3 text-sm text-slate-700">{calc.country}</td>
+                          <td className="px-4 py-3 text-sm font-mono text-slate-700">{calc.fence_type}</td>
+                          <td className="px-4 py-3 text-sm font-mono text-right text-slate-700">{calc.meters}m</td>
+                          <td className="px-4 py-3 text-sm font-mono text-right text-slate-700">{calc.gates}</td>
+                          <td className="px-4 py-3 text-sm font-mono text-right font-medium text-slate-900">
+                            £{calc.breakdown?.raw_total ? calc.breakdown.raw_total.toFixed(2) : "N/A"}
+                          </td>
+                          <td className="px-4 py-3 text-sm font-mono text-right font-medium text-amber-600">
+                            £{ratePerMeter}
+                          </td>
+                          <td className="px-4 py-3 text-sm text-slate-600">{new Date(calc.timestamp).toLocaleDateString()}</td>
+                        </tr>
+                      );
+                    }))
                   )}
                 </tbody>
               </table>
