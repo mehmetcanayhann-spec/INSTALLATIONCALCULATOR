@@ -81,7 +81,7 @@ const Login = ({ onLogin }) => {
   );
 };
 
-const Home = () => {
+const Home = ({ onLogout }) => {
   const [countries, setCountries] = useState([]);
   const [calculations, setCalculations] = useState([]);
   const [loading, setLoading] = useState(false);
