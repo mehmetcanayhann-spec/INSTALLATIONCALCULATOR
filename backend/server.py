@@ -189,6 +189,13 @@ async def get_calculations():
     for calc in calculations:
         if isinstance(calc['timestamp'], str):
             calc['timestamp'] = datetime.fromisoformat(calc['timestamp'])
+        
+        # Add default values for new fields if they don't exist (backwards compatibility)
+        if 'breakdown' in calc:
+            if 'daily_rate_per_man' not in calc['breakdown']:
+                calc['breakdown']['daily_rate_per_man'] = 0.0
+            if 'ground_fixing_screws' not in calc['breakdown']:
+                calc['breakdown']['ground_fixing_screws'] = 0.0
     
     return calculations
 
