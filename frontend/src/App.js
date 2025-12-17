@@ -521,9 +521,21 @@ const Home = ({ onLogout }) => {
         </div>
 
         <div data-testid="archive-section" className="mt-12">
-          <h2 className="font-heading text-2xl font-bold text-slate-900 mb-6 tracking-tight">
-            Calculation Archive
-          </h2>
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="font-heading text-2xl font-bold text-slate-900 tracking-tight">
+              Calculation Archive
+            </h2>
+            {selectedIds.length > 0 && (
+              <Button
+                onClick={handleDeleteSelected}
+                disabled={deleting}
+                data-testid="delete-selected-button"
+                className="rounded-sm border-2 border-red-600 bg-red-600 text-white hover:bg-red-700 shadow-none hover:shadow-[2px_2px_0px_0px_rgba(220,38,38,1)] transition-all duration-150 font-medium"
+              >
+                {deleting ? "Deleting..." : `Delete Selected (${selectedIds.length})`}
+              </Button>
+            )}
+          </div>
           
           <Card className="rounded-sm border-2 border-slate-300 bg-white shadow-sm overflow-hidden">
             <div className="overflow-x-auto">
