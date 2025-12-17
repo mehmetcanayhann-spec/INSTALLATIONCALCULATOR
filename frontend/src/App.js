@@ -449,10 +449,11 @@ const Home = ({ onLogout }) => {
 
                   <Button
                     onClick={handleArchive}
+                    disabled={archiving}
                     data-testid="archive-button"
                     className="w-full rounded-sm border-2 border-emerald-600 bg-emerald-600 text-white hover:bg-emerald-700 shadow-none hover:shadow-[2px_2px_0px_0px_rgba(5,150,105,1)] transition-all duration-150 font-medium"
                   >
-                    Archive This Calculation
+                    {archiving ? "Archiving..." : "Archive This Calculation"}
                   </Button>
                 </div>
               </Card>
