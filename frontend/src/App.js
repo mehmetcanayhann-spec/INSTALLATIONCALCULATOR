@@ -161,6 +161,7 @@ const Home = ({ onLogout }) => {
   const handleArchive = async () => {
     if (!result) return;
     
+    setArchiving(true);
     try {
       const archiveResponse = await axios.post(`${API}/archive`, result);
       console.log("Archive response:", archiveResponse.data);
@@ -170,10 +171,12 @@ const Home = ({ onLogout }) => {
       console.log("Updated calculations:", listResponse.data);
       setCalculations(listResponse.data);
       
-      toast.success("Calculation archived successfully!");
+      toast.success(`Archived! Total items: ${listResponse.data.length}`);
     } catch (error) {
       console.error("Error archiving:", error);
       toast.error("Failed to archive calculation");
+    } finally {
+      setArchiving(false);
     }
   };
 
