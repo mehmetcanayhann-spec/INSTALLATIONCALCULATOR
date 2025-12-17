@@ -44,7 +44,7 @@ const Login = ({ onLogin }) => {
           </h1>
           <p className="text-slate-600 text-sm">Enter password to access the calculator</p>
         </div>
-        
+
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <Label htmlFor="password" className="text-sm font-medium text-slate-700 mb-2 block">
@@ -67,7 +67,7 @@ const Login = ({ onLogin }) => {
               <p className="text-red-500 text-sm mt-1">Incorrect password. Please try again.</p>
             )}
           </div>
-          
+
           <Button
             type="submit"
             data-testid="login-button"
@@ -88,7 +88,7 @@ const Home = ({ onLogout }) => {
   const [archiving, setArchiving] = useState(false);
   const [selectedIds, setSelectedIds] = useState([]);
   const [deleting, setDeleting] = useState(false);
-  
+
   const [formData, setFormData] = useState({
     user_name: "",
     project_name: "",
@@ -97,7 +97,7 @@ const Home = ({ onLogout }) => {
     meters: "",
     gates: ""
   });
-  
+
   const [result, setResult] = useState(null);
 
   useEffect(() => {
@@ -130,8 +130,8 @@ const Home = ({ onLogout }) => {
   };
 
   const handleCalculate = async () => {
-    if (!formData.user_name || !formData.project_name || !formData.country || 
-        !formData.fence_type || !formData.meters || !formData.gates) {
+    if (!formData.user_name || !formData.project_name || !formData.country ||
+      !formData.fence_type || !formData.meters || !formData.gates) {
       toast.error("Please fill in all fields");
       return;
     }
@@ -146,10 +146,10 @@ const Home = ({ onLogout }) => {
         meters: parseFloat(formData.meters),
         gates: parseInt(formData.gates)
       };
-      
+
       // Calculate without saving to database
       const response = await axios.post(`${API}/calculate-preview`, calculationData);
-      
+
       setResult(response.data.calculation);
       toast.success("Calculation completed!");
     } catch (error) {
@@ -162,17 +162,17 @@ const Home = ({ onLogout }) => {
 
   const handleArchive = async () => {
     if (!result) return;
-    
+
     setArchiving(true);
     try {
       const archiveResponse = await axios.post(`${API}/archive`, result);
       console.log("Archive response:", archiveResponse.data);
-      
+
       // Force immediate refresh of calculations
       const listResponse = await axios.get(`${API}/calculations`);
       console.log("Updated calculations:", listResponse.data);
       setCalculations(listResponse.data);
-      
+
       toast.success(`Archived! Total items: ${listResponse.data.length}`);
     } catch (error) {
       console.error("Error archiving:", error);
@@ -223,11 +223,11 @@ const Home = ({ onLogout }) => {
     setDeleting(true);
     try {
       await axios.post(`${API}/delete-calculations`, { ids: selectedIds });
-      
+
       const listResponse = await axios.get(`${API}/calculations`);
       setCalculations(listResponse.data);
       setSelectedIds([]);
-      
+
       toast.success(`Deleted ${selectedIds.length} calculation(s)`);
     } catch (error) {
       console.error("Error deleting:", error);
@@ -240,15 +240,15 @@ const Home = ({ onLogout }) => {
   return (
     <div className="min-h-screen bg-slate-50">
       <Toaster position="top-right" />
-      
+
       <header className="bg-[#2D4A2B] border-b-2 border-[#234520]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
               <div className="bg-white px-3 py-2 rounded-sm">
-                <img 
-                  src="https://customer-assets.emergentagent.com/job_meter-price-tool/artifacts/a3m47d7y_NEW%20LOGO.png" 
-                  alt="Duralock Logo" 
+                <img
+                  src="https://customer-assets.emergentagent.com/job_meter-price-tool/artifacts/a3m47d7y_NEW%20LOGO.png"
+                  alt="Duralock Logo"
                   className="h-10 sm:h-12 w-auto"
                 />
               </div>
@@ -278,7 +278,7 @@ const Home = ({ onLogout }) => {
               <h2 className="font-heading text-xl font-bold text-slate-900 mb-6 tracking-tight">
                 Project Details
               </h2>
-              
+
               <div className="space-y-5">
                 <div>
                   <Label htmlFor="user_name" className="text-sm font-medium text-slate-700 mb-2 block">
@@ -326,7 +326,7 @@ const Home = ({ onLogout }) => {
 
                 <div>
                   <Label htmlFor="fence_type" className="text-sm font-medium text-slate-700 mb-2 block">
-                    Fence Type
+                    Fence Types
                   </Label>
                   <Select value={formData.fence_type} onValueChange={(value) => handleInputChange("fence_type", value)}>
                     <SelectTrigger data-testid="fence-type-select" className="rounded-sm border-2 border-slate-300 focus:border-amber-500 focus:ring-0 bg-white">
@@ -335,7 +335,7 @@ const Home = ({ onLogout }) => {
                     <SelectContent>
                       <SelectItem value="OR">OR - Oval Running Rail (136m/day)</SelectItem>
                       <SelectItem value="PR1">PR1</SelectItem>
-                                            <SelectItem value="PR2">PR2</SelectItem>
+                      <SelectItem value="PR2">PR2</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -400,7 +400,7 @@ const Home = ({ onLogout }) => {
                   <h2 className="font-heading text-xl font-bold text-slate-900 mb-4 tracking-tight">
                     Cost Breakdown
                   </h2>
-                  
+
                   <div className="space-y-3 mb-6">
                     <div className="flex justify-between items-center">
                       <span className="text-sm text-slate-600">Project:</span>
@@ -477,7 +477,7 @@ const Home = ({ onLogout }) => {
                   <h3 className="font-heading text-lg font-bold text-slate-900 mb-3 tracking-tight">
                     Markup Options
                   </h3>
-                  
+
                   <div className="space-y-2 mb-6">
                     <div className="flex justify-between items-center bg-amber-50 border-2 border-amber-200 rounded-sm p-3">
                       <span className="text-sm font-medium text-slate-900">+30% Markup:</span>
@@ -537,7 +537,7 @@ const Home = ({ onLogout }) => {
               </Button>
             )}
           </div>
-          
+
           <Card className="rounded-sm border-2 border-slate-300 bg-white shadow-sm overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full">
@@ -572,14 +572,14 @@ const Home = ({ onLogout }) => {
                     </tr>
                   ) : (
                     calculations.map((calc) => {
-                      const ratePerMeter = calc.breakdown?.rate_per_meter 
-                        ? calc.breakdown.rate_per_meter.toFixed(2) 
-                        : (calc.breakdown?.raw_total && calc.meters 
-                          ? (calc.breakdown.raw_total / calc.meters).toFixed(2) 
+                      const ratePerMeter = calc.breakdown?.rate_per_meter
+                        ? calc.breakdown.rate_per_meter.toFixed(2)
+                        : (calc.breakdown?.raw_total && calc.meters
+                          ? (calc.breakdown.raw_total / calc.meters).toFixed(2)
                           : "N/A");
-                      
+
                       const isSelected = selectedIds.includes(calc.id);
-                      
+
                       return (
                         <tr key={calc.id} data-testid="archive-row" className={`transition-colors duration-150 ${isSelected ? 'bg-red-50' : 'hover:bg-slate-50'}`}>
                           <td className="px-4 py-3 text-center">
