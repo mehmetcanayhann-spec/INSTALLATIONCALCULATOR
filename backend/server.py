@@ -204,22 +204,33 @@ async def archive_calculation(calculation: Calculation):
     
     return {"calculation": calculation}
 
-@api_router.get("/calculations", response_model=List[Calculation])
+@api_router.get("/calculations")
 async def get_calculations():
     calculations = await db.calculations.find({}, {"_id": 0}).sort("timestamp", -1).to_list(100)
     
+    result = []
     for calc in calculations:
-        if isinstance(calc['timestamp'], str):
-            calc['timestamp'] = datetime.fromisoformat(calc['timestamp'])
-        
-        # Add default values for new fields if they don't exist (backwards compatibility)
-        if 'breakdown' in calc:
-            if 'daily_rate_per_man' not in calc['breakdown']:
-                calc['breakdown']['daily_rate_per_man'] = 0.0
-            if 'ground_fixing_screws' not in calc['breakdown']:
-                calc['breakdown']['ground_fixing_screws'] = 0.0
+        try:
+            if isinstance(calc['timestamp'], str):
+                calc['timestamp'] = datetime.fromisoformat(calc['timestamp'])
+            
+            # Add default values for new fields if they don't exist (backwards compatibility)
+            if 'breakdown' in calc:
+                if 'daily_rate_per_man' not in calc['breakdown']:
+                    calc['breakdown']['daily_rate_per_man'] = 0.0
+                if 'ground_fixing_screws' not in calc['breakdown']:
+                    calc['breakdown']['ground_fixing_screws'] = 0.0
+            
+            # Validate and convert to Calculation model
+            validated_calc = Calculation(**calc)
+            result.append(validated_calc.model_dump())
+        except Exception as e:
+            # Skip invalid calculations
+            logger = logging.getLogger(__name__)
+            logger.warning(f"Skipping invalid calculation: {e}")
+            continue
     
-    return calculations
+    return result
 
 app.include_router(api_router)
 
