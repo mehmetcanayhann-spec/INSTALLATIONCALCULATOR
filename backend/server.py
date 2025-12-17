@@ -43,6 +43,7 @@ logger.info(f"MongoDB configured: {db_name}")
 
 app = FastAPI()
 api_router = APIRouter(prefix="/api")
+uk_router = APIRouter(prefix="/api/uk")
 
 COUNTRY_MIN_WAGES = {
     "United Kingdom": 12.21,
@@ -270,7 +271,199 @@ async def get_calculations():
     
     return result
 
+class UKCalculationRequest(BaseModel):
+    user_name: str
+    project_name: str
+    fence_type: str
+    meters: float
+    gates: int
+    is_time_sensitive: bool = False
+    days_available: Optional[int] = None
+    num_labourers: Optional[int] = None
+
+class UKCostBreakdown(BaseModel):
+    work_days: float
+    num_labourers: int
+    daily_rate_per_man: float
+    labor_cost: float
+    tools_cost: float
+    accommodation_cost: float
+    transportation_cost: float
+    concrete_cost: float
+    raw_total: float
+    rate_per_meter: float
+    markup_30: float
+    markup_40: float
+    markup_50: float
+    markup_60: float
+
+class UKCalculation(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    calculator_type: str = "uk"
+    user_name: str
+    project_name: str
+    fence_type: str
+    meters: float
+    gates: int
+    is_time_sensitive: bool
+    days_available: Optional[int] = None
+    num_labourers: int
+    breakdown: UKCostBreakdown
+    timestamp: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+
+class UKCalculationResponse(BaseModel):
+    calculation: UKCalculation
+
+UK_DAILY_RATE_PER_MAN = 200.0
+UK_ACCOMMODATION_PER_DAY_PER_MAN = 75.0
+UK_TRANSPORTATION_COST = 250.0
+UK_CONCRETE_COST_PER_METER = 2.0
+UK_FENCE_PRODUCTIVITY = {
+    "OR": 270,
+    "PR": 60,
+    "CM": 60,
+    "CT": 60,
+    "HM": 60
+}
+
+def calculate_uk_pricing(request: UKCalculationRequest):
+    """Calculate UK-specific pricing"""
+    if request.fence_type not in UK_FENCE_PRODUCTIVITY:
+        raise HTTPException(status_code=400, detail="Invalid fence type selected")
+    
+    base_productivity_2_men = UK_FENCE_PRODUCTIVITY[request.fence_type]
+    
+    gate_hours_total = request.gates * 2
+    
+    fence_days_for_2_men = request.meters / base_productivity_2_men
+    gate_days_for_2_men = gate_hours_total / 8
+    setup_cleanup_days = 1
+    
+    total_worker_days_needed = (fence_days_for_2_men + gate_days_for_2_men + setup_cleanup_days) * 2
+    
+    if request.is_time_sensitive and request.days_available:
+        days_available = request.days_available
+        required_labourers = math.ceil(total_worker_days_needed / days_available)
+        if required_labourers < 2:
+            required_labourers = 2
+        if required_labourers % 2 != 0:
+            required_labourers += 1
+        num_labourers = required_labourers
+        total_work_days = math.ceil(total_worker_days_needed / num_labourers)
+    else:
+        num_labourers = request.num_labourers if request.num_labourers and request.num_labourers >= 2 else 2
+        if num_labourers % 2 != 0:
+            num_labourers += 1
+        total_work_days = math.ceil(total_worker_days_needed / num_labourers)
+    
+    labor_cost = num_labourers * UK_DAILY_RATE_PER_MAN * total_work_days
+    
+    tools_base = 200
+    tools_daily = 100 * total_work_days
+    total_tools_cost = tools_base + tools_daily
+    
+    accommodation_cost = num_labourers * UK_ACCOMMODATION_PER_DAY_PER_MAN * total_work_days
+    
+    transportation_cost = UK_TRANSPORTATION_COST
+    
+    if request.fence_type in ["PR", "CM", "CT", "HM"]:
+        concrete_cost = request.meters * UK_CONCRETE_COST_PER_METER
+    else:
+        concrete_cost = 0.0
+    
+    raw_total = labor_cost + total_tools_cost + accommodation_cost + transportation_cost + concrete_cost
+    rate_per_meter = raw_total / request.meters if request.meters > 0 else 0
+    
+    breakdown = UKCostBreakdown(
+        work_days=float(total_work_days),
+        num_labourers=num_labourers,
+        daily_rate_per_man=UK_DAILY_RATE_PER_MAN,
+        labor_cost=round(labor_cost, 2),
+        tools_cost=round(total_tools_cost, 2),
+        accommodation_cost=round(accommodation_cost, 2),
+        transportation_cost=round(transportation_cost, 2),
+        concrete_cost=round(concrete_cost, 2),
+        raw_total=round(raw_total, 2),
+        rate_per_meter=round(rate_per_meter, 2),
+        markup_30=round(raw_total * 1.30, 2),
+        markup_40=round(raw_total * 1.40, 2),
+        markup_50=round(raw_total * 1.50, 2),
+        markup_60=round(raw_total * 1.60, 2)
+    )
+    
+    calculation = UKCalculation(
+        user_name=request.user_name,
+        project_name=request.project_name,
+        fence_type=request.fence_type,
+        meters=request.meters,
+        gates=request.gates,
+        is_time_sensitive=request.is_time_sensitive,
+        days_available=request.days_available,
+        num_labourers=num_labourers,
+        breakdown=breakdown
+    )
+    
+    return calculation
+
+@uk_router.get("/")
+async def uk_root():
+    return {"message": "UK Racing Fence Installation Pricing API"}
+
+@uk_router.get("/fence-types")
+async def get_uk_fence_types():
+    return {"fence_types": list(UK_FENCE_PRODUCTIVITY.keys())}
+
+@uk_router.post("/calculate-preview", response_model=UKCalculationResponse)
+async def uk_calculate_preview(request: UKCalculationRequest):
+    """Calculate UK pricing without saving to database"""
+    calculation = calculate_uk_pricing(request)
+    return {"calculation": calculation}
+
+@uk_router.post("/archive", response_model=UKCalculationResponse)
+async def uk_archive_calculation(calculation: UKCalculation):
+    """Save UK calculation to archive"""
+    doc = calculation.model_dump()
+    doc['timestamp'] = doc['timestamp'].isoformat()
+    doc['calculator_type'] = 'uk'
+    
+    await db.uk_calculations.insert_one(doc)
+    
+    return {"calculation": calculation}
+
+@uk_router.post("/delete-calculations")
+async def uk_delete_calculations(request: DeleteRequest):
+    """Delete UK calculations by IDs"""
+    try:
+        result = await db.uk_calculations.delete_many({"id": {"$in": request.ids}})
+        return {"deleted_count": result.deleted_count, "ids": request.ids}
+    except Exception as e:
+        logger = logging.getLogger(__name__)
+        logger.error(f"Error deleting UK calculations: {e}")
+        raise HTTPException(status_code=500, detail="Failed to delete calculations")
+
+@uk_router.get("/calculations")
+async def get_uk_calculations():
+    calculations = await db.uk_calculations.find({}, {"_id": 0}).sort("timestamp", -1).to_list(100)
+    
+    result = []
+    for calc in calculations:
+        try:
+            if isinstance(calc['timestamp'], str):
+                calc['timestamp'] = datetime.fromisoformat(calc['timestamp'])
+            
+            validated_calc = UKCalculation(**calc)
+            result.append(validated_calc.model_dump())
+        except Exception as e:
+            logger = logging.getLogger(__name__)
+            logger.warning(f"Skipping invalid UK calculation: {e}")
+            continue
+    
+    return result
+
 app.include_router(api_router)
+app.include_router(uk_router)
 
 app.add_middleware(
     CORSMiddleware,

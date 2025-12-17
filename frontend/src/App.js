@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
 import "@/App.css";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { Calculator, Lock } from "lucide-react";
+import UKCalculator from "@/UKCalculator";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -81,7 +82,7 @@ const Login = ({ onLogin }) => {
   );
 };
 
-const Home = ({ onLogout }) => {
+const Home = ({ onLogout, onSwitchToUK }) => {
   const [countries, setCountries] = useState([]);
   const [calculations, setCalculations] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -261,14 +262,23 @@ const Home = ({ onLogout }) => {
                 <p className="text-slate-200 text-sm mt-1">Calculate installation costs per meter</p>
               </div>
             </div>
-            <Button
-              onClick={onLogout}
-              data-testid="logout-button"
-              variant="outline"
-              className="rounded-sm border-2 border-white text-white hover:bg-white hover:text-[#2D4A2B] transition-all duration-150"
-            >
-              Logout
-            </Button>
+            <div className="flex gap-2">
+              <Button
+                onClick={onSwitchToUK}
+                variant="outline"
+                className="rounded-sm border-2 border-amber-400 text-amber-400 hover:bg-amber-400 hover:text-[#2D4A2B] transition-all duration-150"
+              >
+                UK Calculator
+              </Button>
+              <Button
+                onClick={onLogout}
+                data-testid="logout-button"
+                variant="outline"
+                className="rounded-sm border-2 border-white text-white hover:bg-white hover:text-[#2D4A2B] transition-all duration-150"
+              >
+                Logout
+              </Button>
+            </div>
           </div>
         </div>
       </header>
@@ -667,11 +677,28 @@ function App() {
   return (
     <div className="App">
       <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Home onLogout={handleLogout} />} />
-        </Routes>
+        <AppRoutes onLogout={handleLogout} />
       </BrowserRouter>
     </div>
+  );
+}
+
+function AppRoutes({ onLogout }) {
+  const navigate = useNavigate();
+
+  const handleSwitchToUK = () => {
+    navigate("/uk");
+  };
+
+  const handleSwitchToInternational = () => {
+    navigate("/");
+  };
+
+  return (
+    <Routes>
+      <Route path="/" element={<Home onLogout={onLogout} onSwitchToUK={handleSwitchToUK} />} />
+      <Route path="/uk" element={<UKCalculator onLogout={onLogout} onSwitchCalculator={handleSwitchToInternational} />} />
+    </Routes>
   );
 }
 

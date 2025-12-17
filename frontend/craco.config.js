@@ -84,6 +84,13 @@ webpackConfig.devServer = (devServerConfig) => {
   devServerConfig.allowedHosts = 'all';
   devServerConfig.host = '0.0.0.0';
   devServerConfig.port = 5000;
+  devServerConfig.proxy = [
+    {
+      context: ['/api', '/health'],
+      target: 'http://localhost:8000',
+      changeOrigin: true,
+    },
+  ];
 
   // Apply visual edits dev server setup if enabled
   if (config.enableVisualEdits && setupDevServer) {
