@@ -64,12 +64,12 @@ class CalculationRequest(BaseModel):
 
 class CostBreakdown(BaseModel):
     work_days: float
-    daily_rate_per_man: float
+    daily_rate_per_man: Optional[float] = 0.0
     labor_cost: float
     tools_cost: float
     supervision_cost: float
     flight_ticket: float
-    ground_fixing_screws: float
+    ground_fixing_screws: Optional[float] = 0.0
     raw_total: float
     rate_per_meter: float
     markup_30: float
