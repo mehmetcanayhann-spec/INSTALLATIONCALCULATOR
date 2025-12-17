@@ -385,10 +385,12 @@ const Home = ({ onLogout }) => {
                       <span className="text-sm text-slate-600">Work Days:</span>
                       <span className="font-mono font-medium text-slate-900">{result.breakdown.work_days} days</span>
                     </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-sm text-slate-600">Daily Rate per Man:</span>
-                      <span className="font-mono font-medium text-amber-600">£{result.breakdown.daily_rate_per_man.toFixed(2)}/day</span>
-                    </div>
+                    {result.breakdown.daily_rate_per_man > 0 && (
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm text-slate-600">Daily Rate per Man:</span>
+                        <span className="font-mono font-medium text-amber-600">£{result.breakdown.daily_rate_per_man.toFixed(2)}/day</span>
+                      </div>
+                    )}
                     <div className="flex justify-between items-center">
                       <span className="text-sm text-slate-600">Labour Cost (8 workers):</span>
                       <span className="font-mono font-medium text-slate-900">£{result.breakdown.labor_cost.toFixed(2)}</span>
@@ -405,10 +407,12 @@ const Home = ({ onLogout }) => {
                       <span className="text-sm text-slate-600">Flight Ticket:</span>
                       <span className="font-mono font-medium text-slate-900">£{result.breakdown.flight_ticket.toFixed(2)}</span>
                     </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-sm text-slate-600">Ground Fixing Screws:</span>
-                      <span className="font-mono font-medium text-slate-900">£{result.breakdown.ground_fixing_screws.toFixed(2)}</span>
-                    </div>
+                    {result.breakdown.ground_fixing_screws > 0 && (
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm text-slate-600">Ground Fixing Screws:</span>
+                        <span className="font-mono font-medium text-slate-900">£{result.breakdown.ground_fixing_screws.toFixed(2)}</span>
+                      </div>
+                    )}
                   </div>
 
                   <Separator className="my-4" />
