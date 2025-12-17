@@ -16,25 +16,28 @@ import ssl
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
 
-mongo_url = os.environ['MONGO_URL']
+# MongoDB connection configuration
+mongo_url = os.environ.get('MONGO_URL', 'mongodb://localhost:27017')
+db_name = os.environ.get('DB_NAME', 'test_database')
 
-# Configure MongoDB client with SSL settings for Atlas
-try:
+# Check if it's an Atlas connection (mongodb+srv) or local
+if 'mongodb+srv' in mongo_url or 'mongodb.net' in mongo_url:
+    # Atlas connection with SSL
     client = AsyncIOMotorClient(
         mongo_url,
         tlsCAFile=certifi.where(),
-        serverSelectionTimeoutMS=10000,
-        connectTimeoutMS=20000
+        serverSelectionTimeoutMS=5000,
+        connectTimeoutMS=10000
     )
-    db = client[os.environ['DB_NAME']]
-    logger = logging.getLogger(__name__)
-    logger.info(f"MongoDB connection configured for: {os.environ['DB_NAME']}")
-except Exception as e:
-    logger = logging.getLogger(__name__)
-    logger.error(f"MongoDB connection error: {e}")
-    # Fallback to local MongoDB for development
-    client = AsyncIOMotorClient("mongodb://localhost:27017")
-    db = client["test_database"]
+else:
+    # Local MongoDB connection
+    client = AsyncIOMotorClient(mongo_url)
+
+db = client[db_name]
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+logger.info(f"MongoDB configured: {db_name}")
 
 app = FastAPI()
 api_router = APIRouter(prefix="/api")
