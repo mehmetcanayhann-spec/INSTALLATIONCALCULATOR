@@ -334,7 +334,7 @@ const Home = ({ onLogout }) => {
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="OR">OR - Oval Running Rail (136m/day)</SelectItem>
-                      <SelectItem value="PR">PR1</SelectItem>
+                      <SelectItem value="PR1">PR1</SelectItem>
                                             <SelectItem value="PR2">PR2</SelectItem>
                     </SelectContent>
                   </Select>
