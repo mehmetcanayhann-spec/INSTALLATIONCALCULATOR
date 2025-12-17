@@ -85,6 +85,7 @@ const Home = ({ onLogout }) => {
   const [countries, setCountries] = useState([]);
   const [calculations, setCalculations] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [archiving, setArchiving] = useState(false);
   
   const [formData, setFormData] = useState({
     user_name: "",
