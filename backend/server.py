@@ -18,17 +18,11 @@ load_dotenv(ROOT_DIR / '.env')
 
 mongo_url = os.environ['MONGO_URL']
 
-# Create SSL context for MongoDB Atlas
-ssl_context = ssl.create_default_context(cafile=certifi.where())
-ssl_context.check_hostname = False
-ssl_context.verify_mode = ssl.CERT_NONE
-
 # Configure MongoDB client with SSL settings for Atlas
 try:
     client = AsyncIOMotorClient(
         mongo_url,
         tlsCAFile=certifi.where(),
-        ssl_cert_reqs=ssl.CERT_NONE,
         serverSelectionTimeoutMS=10000,
         connectTimeoutMS=20000
     )
