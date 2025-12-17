@@ -15,7 +15,14 @@ ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
 
 mongo_url = os.environ['MONGO_URL']
-client = AsyncIOMotorClient(mongo_url)
+# Configure MongoDB client with SSL settings for Atlas
+client = AsyncIOMotorClient(
+    mongo_url,
+    tls=True,
+    tlsAllowInvalidCertificates=True,
+    serverSelectionTimeoutMS=5000,
+    connectTimeoutMS=10000
+)
 db = client[os.environ['DB_NAME']]
 
 app = FastAPI()
