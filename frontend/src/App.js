@@ -542,6 +542,15 @@ const Home = ({ onLogout }) => {
               <table className="w-full">
                 <thead className="bg-slate-900 border-b-2 border-slate-800">
                   <tr>
+                    <th className="px-4 py-3 text-center text-xs font-bold text-white uppercase tracking-wide">
+                      <input
+                        type="checkbox"
+                        checked={calculations.length > 0 && selectedIds.length === calculations.length}
+                        onChange={(e) => handleSelectAll(e.target.checked)}
+                        className="w-4 h-4 rounded border-white cursor-pointer"
+                        data-testid="select-all-checkbox"
+                      />
+                    </th>
                     <th className="px-4 py-3 text-left text-xs font-bold text-white uppercase tracking-wide">Name</th>
                     <th className="px-4 py-3 text-left text-xs font-bold text-white uppercase tracking-wide">Project</th>
                     <th className="px-4 py-3 text-left text-xs font-bold text-white uppercase tracking-wide">Country</th>
