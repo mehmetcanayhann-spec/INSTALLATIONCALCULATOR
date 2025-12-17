@@ -161,13 +161,15 @@ const Home = ({ onLogout }) => {
     if (!result) return;
     
     try {
-      await axios.post(`${API}/archive`, result);
-      toast.success("Calculation archived successfully!");
+      const archiveResponse = await axios.post(`${API}/archive`, result);
+      console.log("Archive response:", archiveResponse.data);
       
-      // Wait a moment then refresh the archive list
-      setTimeout(() => {
-        fetchCalculations();
-      }, 500);
+      // Force immediate refresh of calculations
+      const listResponse = await axios.get(`${API}/calculations`);
+      console.log("Updated calculations:", listResponse.data);
+      setCalculations(listResponse.data);
+      
+      toast.success("Calculation archived successfully!");
     } catch (error) {
       console.error("Error archiving:", error);
       toast.error("Failed to archive calculation");
