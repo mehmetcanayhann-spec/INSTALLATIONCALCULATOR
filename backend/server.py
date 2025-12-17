@@ -121,6 +121,10 @@ class CalculationResponse(BaseModel):
 async def root():
     return {"message": "Racing Fence Installation Pricing API"}
 
+@app.get("/health")
+async def health_check():
+    return {"status": "healthy"}
+
 @api_router.get("/countries")
 async def get_countries():
     return {"countries": sorted(list(COUNTRY_MIN_WAGES.keys()))}
