@@ -194,6 +194,49 @@ const Home = ({ onLogout }) => {
     setResult(null);
   };
 
+  const handleSelectAll = (checked) => {
+    if (checked) {
+      setSelectedIds(calculations.map(calc => calc.id));
+    } else {
+      setSelectedIds([]);
+    }
+  };
+
+  const handleSelectRow = (id, checked) => {
+    if (checked) {
+      setSelectedIds([...selectedIds, id]);
+    } else {
+      setSelectedIds(selectedIds.filter(selectedId => selectedId !== id));
+    }
+  };
+
+  const handleDeleteSelected = async () => {
+    if (selectedIds.length === 0) {
+      toast.error("Please select at least one item to delete");
+      return;
+    }
+
+    if (!window.confirm(`Are you sure you want to delete ${selectedIds.length} calculation(s)?`)) {
+      return;
+    }
+
+    setDeleting(true);
+    try {
+      await axios.post(`${API}/delete-calculations`, { ids: selectedIds });
+      
+      const listResponse = await axios.get(`${API}/calculations`);
+      setCalculations(listResponse.data);
+      setSelectedIds([]);
+      
+      toast.success(`Deleted ${selectedIds.length} calculation(s)`);
+    } catch (error) {
+      console.error("Error deleting:", error);
+      toast.error("Failed to delete calculations");
+    } finally {
+      setDeleting(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-slate-50">
       <Toaster position="top-right" />
