@@ -565,7 +565,7 @@ const Home = ({ onLogout }) => {
                 <tbody className="divide-y divide-slate-200">
                   {calculations.length === 0 ? (
                     <tr>
-                      <td colSpan="9" className="px-4 py-8 text-center text-sm text-slate-500">
+                      <td colSpan="10" className="px-4 py-8 text-center text-sm text-slate-500">
                         No calculations yet. Create your first one above!
                       </td>
                     </tr>
@@ -577,8 +577,19 @@ const Home = ({ onLogout }) => {
                           ? (calc.breakdown.raw_total / calc.meters).toFixed(2) 
                           : "N/A");
                       
+                      const isSelected = selectedIds.includes(calc.id);
+                      
                       return (
-                        <tr key={calc.id} data-testid="archive-row" className="hover:bg-slate-50 transition-colors duration-150">
+                        <tr key={calc.id} data-testid="archive-row" className={`transition-colors duration-150 ${isSelected ? 'bg-red-50' : 'hover:bg-slate-50'}`}>
+                          <td className="px-4 py-3 text-center">
+                            <input
+                              type="checkbox"
+                              checked={isSelected}
+                              onChange={(e) => handleSelectRow(calc.id, e.target.checked)}
+                              className="w-4 h-4 rounded border-slate-300 cursor-pointer"
+                              data-testid={`checkbox-${calc.id}`}
+                            />
+                          </td>
                           <td className="px-4 py-3 text-sm text-slate-900 font-medium">{calc.user_name}</td>
                           <td className="px-4 py-3 text-sm text-slate-900">{calc.project_name}</td>
                           <td className="px-4 py-3 text-sm text-slate-700">{calc.country}</td>
