@@ -82,6 +82,7 @@ class CalculationRequest(BaseModel):
     fence_type: str
     meters: float
     gates: int
+    ground_fixing_method: str = "Angle Steel"
 
 class CostBreakdown(BaseModel):
     work_days: float
@@ -90,7 +91,7 @@ class CostBreakdown(BaseModel):
     tools_cost: float
     supervision_cost: float
     flight_ticket: float
-    ground_fixing_screws: Optional[float] = 0.0
+    ground_fixing_cost: Optional[float] = 0.0
     raw_total: float
     rate_per_meter: float
     markup_30: float
@@ -108,6 +109,7 @@ class Calculation(BaseModel):
     fence_type: str
     meters: float
     gates: int
+    ground_fixing_method: Optional[str] = "Angle Steel"
     breakdown: CostBreakdown
     timestamp: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
@@ -163,9 +165,13 @@ def calculate_pricing(request: CalculationRequest):
     flight_ticket = 500
     total_supervision_cost = supervision_daily
     
-    ground_fixing_screws_cost = request.meters * 0.78
+    if request.ground_fixing_method == "Inner GMS Post with Baseplate":
+        ground_fixing_cost = request.meters * 0.078
+    else:
+        # Default is Angle Steel
+        ground_fixing_cost = request.meters * 1.0
     
-    raw_total = total_labor_cost + total_tools_cost + total_supervision_cost + flight_ticket + ground_fixing_screws_cost
+    raw_total = total_labor_cost + total_tools_cost + total_supervision_cost + flight_ticket + ground_fixing_cost
     rate_per_meter = raw_total / request.meters
     
     breakdown = CostBreakdown(
@@ -175,7 +181,7 @@ def calculate_pricing(request: CalculationRequest):
         tools_cost=round(total_tools_cost, 2),
         supervision_cost=round(total_supervision_cost, 2),
         flight_ticket=flight_ticket,
-        ground_fixing_screws=round(ground_fixing_screws_cost, 2),
+        ground_fixing_cost=round(ground_fixing_cost, 2),
         raw_total=round(raw_total, 2),
         rate_per_meter=round(rate_per_meter, 2),
         markup_30=round(raw_total * 1.30, 2),
@@ -191,6 +197,7 @@ def calculate_pricing(request: CalculationRequest):
         fence_type=request.fence_type,
         meters=request.meters,
         gates=request.gates,
+        ground_fixing_method=request.ground_fixing_method,
         breakdown=breakdown
     )
     
@@ -237,11 +244,18 @@ async def get_calculations():
                 calc['timestamp'] = datetime.fromisoformat(calc['timestamp'])
             
             # Add default values for new fields if they don't exist (backwards compatibility)
+            if 'ground_fixing_method' not in calc:
+                calc['ground_fixing_method'] = "Angle Steel"
+
             if 'breakdown' in calc:
                 if 'daily_rate_per_man' not in calc['breakdown']:
                     calc['breakdown']['daily_rate_per_man'] = 0.0
-                if 'ground_fixing_screws' not in calc['breakdown']:
-                    calc['breakdown']['ground_fixing_screws'] = 0.0
+                
+                # Migrate old ground_fixing_screws to ground_fixing_cost
+                if 'ground_fixing_screws' in calc['breakdown'] and 'ground_fixing_cost' not in calc['breakdown']:
+                    calc['breakdown']['ground_fixing_cost'] = calc['breakdown'].pop('ground_fixing_screws', 0.0)
+                elif 'ground_fixing_cost' not in calc['breakdown']:
+                    calc['breakdown']['ground_fixing_cost'] = 0.0
             
             # Validate and convert to Calculation model
             validated_calc = Calculation(**calc)

@@ -95,7 +95,8 @@ const Home = ({ onLogout }) => {
     country: "",
     fence_type: "",
     meters: "",
-    gates: ""
+    gates: "",
+    ground_fixing_method: "Angle Steel"
   });
 
   const [result, setResult] = useState(null);
@@ -144,7 +145,8 @@ const Home = ({ onLogout }) => {
         country: formData.country,
         fence_type: formData.fence_type,
         meters: parseFloat(formData.meters),
-        gates: parseInt(formData.gates)
+        gates: parseInt(formData.gates),
+        ground_fixing_method: formData.ground_fixing_method
       };
 
       // Calculate without saving to database
@@ -341,6 +343,21 @@ const Home = ({ onLogout }) => {
                 </div>
 
                 <div>
+                  <Label htmlFor="ground_fixing_method" className="text-sm font-medium text-slate-700 mb-2 block">
+                    Ground Fixing Method
+                  </Label>
+                  <Select value={formData.ground_fixing_method} onValueChange={(value) => handleInputChange("ground_fixing_method", value)}>
+                    <SelectTrigger data-testid="ground-fixing-method-select" className="rounded-sm border-2 border-slate-300 focus:border-amber-500 focus:ring-0 bg-white">
+                      <SelectValue placeholder="Select ground fixing method" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="Angle Steel">Angle Steel</SelectItem>
+                      <SelectItem value="Inner GMS Post with Baseplate">Inner GMS Post with Baseplate</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div>
                   <Label htmlFor="meters" className="text-sm font-medium text-slate-700 mb-2 block">
                     Total Meters
                   </Label>
@@ -453,10 +470,10 @@ const Home = ({ onLogout }) => {
                       <span className="text-sm text-slate-600">Flight Ticket:</span>
                       <span className="font-mono font-medium text-slate-900">£{result.breakdown.flight_ticket.toFixed(2)}</span>
                     </div>
-                    {result.breakdown.ground_fixing_screws > 0 && (
+                    {result.breakdown.ground_fixing_cost > 0 && (
                       <div className="flex justify-between items-center">
-                        <span className="text-sm text-slate-600">Ground Fixing Screws:</span>
-                        <span className="font-mono font-medium text-slate-900">£{result.breakdown.ground_fixing_screws.toFixed(2)}</span>
+                        <span className="text-sm text-slate-600">Ground Fixing Cost:</span>
+                        <span className="font-mono font-medium text-slate-900">£{result.breakdown.ground_fixing_cost.toFixed(2)}</span>
                       </div>
                     )}
                   </div>
