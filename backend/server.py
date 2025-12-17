@@ -136,7 +136,12 @@ def calculate_pricing(request: CalculationRequest):
     if min_wage == 0:
         min_wage = 15.00
     
-    daily_capacity = 136 if request.fence_type == "OR" else 128
+    fence_types = {
+"OR":136,
+"PR1":136,
+"PR2":128}
+ 
+    daily_capacity = fencet_types[request.fence_type]
     
     fence_days = request.meters / daily_capacity
     gate_days = request.gates * 0.25
