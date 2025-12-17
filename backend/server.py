@@ -141,7 +141,7 @@ def calculate_pricing(request: CalculationRequest):
 "PR1":136,
 "PR2":128}
  
-    daily_capacity = fencet_types[request.fence_type]
+    daily_capacity = fence_types[request.fence_type]
     
     fence_days = request.meters / daily_capacity
     gate_days = request.gates * 0.25
