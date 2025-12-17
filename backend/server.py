@@ -207,6 +207,20 @@ async def archive_calculation(calculation: Calculation):
     
     return {"calculation": calculation}
 
+class DeleteRequest(BaseModel):
+    ids: List[str]
+
+@api_router.post("/delete-calculations")
+async def delete_calculations(request: DeleteRequest):
+    """Delete calculations by IDs"""
+    try:
+        result = await db.calculations.delete_many({"id": {"$in": request.ids}})
+        return {"deleted_count": result.deleted_count, "ids": request.ids}
+    except Exception as e:
+        logger = logging.getLogger(__name__)
+        logger.error(f"Error deleting calculations: {e}")
+        raise HTTPException(status_code=500, detail="Failed to delete calculations")
+
 @api_router.get("/calculations")
 async def get_calculations():
     calculations = await db.calculations.find({}, {"_id": 0}).sort("timestamp", -1).to_list(100)
