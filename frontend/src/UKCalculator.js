@@ -15,11 +15,11 @@ const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api/uk`;
 
 const FENCE_TYPES = [
-  { value: "OR", label: "OR - Oval Running Rail (270m/day)", productivity: 270 },
-  { value: "PR", label: "PR - Post & Rail (60m/day)", productivity: 60 },
-  { value: "CM", label: "CM - Chestnut Mortice (60m/day)", productivity: 60 },
-  { value: "CT", label: "CT - Close Top (60m/day)", productivity: 60 },
-  { value: "HM", label: "HM - Half Mesh (60m/day)", productivity: 60 },
+  { value: "OR", label: "OR - (270m/day)", productivity: 270 },
+  { value: "PR", label: "PR - (60m/day)", productivity: 60 },
+  { value: "CM", label: "CM - (60m/day)", productivity: 60 },
+  { value: "CT", label: "CT - (60m/day)", productivity: 60 },
+  { value: "HM", label: "HM - (60m/day)", productivity: 60 },
 ];
 
 const UKCalculator = ({ onLogout, onSwitchCalculator }) => {
