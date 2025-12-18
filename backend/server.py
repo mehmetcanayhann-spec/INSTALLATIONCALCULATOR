@@ -101,6 +101,9 @@ class CostBreakdown(BaseModel):
     markup_40: float
     markup_50: float
     markup_60: float
+    bad_case_20: float
+    more_bad_case_40: float
+    worst_case_80: float
 
 class Calculation(BaseModel):
     model_config = ConfigDict(extra="ignore")
@@ -280,6 +283,8 @@ class UKCalculationRequest(BaseModel):
     is_time_sensitive: bool = False
     days_available: Optional[int] = None
     num_labourers: Optional[int] = None
+    delivery_lead: Optional[str] = None
+    delivery_copilot: Optional[str] = None
 
 class UKCostBreakdown(BaseModel):
     work_days: float
@@ -296,6 +301,9 @@ class UKCostBreakdown(BaseModel):
     markup_40: float
     markup_50: float
     markup_60: float
+    bad_case_20: float
+    more_bad_case_40: float
+    worst_case_80: float
 
 class UKCalculation(BaseModel):
     model_config = ConfigDict(extra="ignore")
@@ -310,6 +318,8 @@ class UKCalculation(BaseModel):
     is_time_sensitive: bool
     days_available: Optional[int] = None
     num_labourers: int
+    delivery_lead: Optional[str] = None
+    delivery_copilot: Optional[str] = None
     breakdown: UKCostBreakdown
     timestamp: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
@@ -390,7 +400,10 @@ def calculate_uk_pricing(request: UKCalculationRequest):
         markup_30=round(raw_total * 1.30, 2),
         markup_40=round(raw_total * 1.40, 2),
         markup_50=round(raw_total * 1.50, 2),
-        markup_60=round(raw_total * 1.60, 2)
+        markup_60=round(raw_total * 1.60, 2),
+        bad_case_20=round(raw_total * 1.20, 2),
+        more_bad_case_40=round(raw_total * 1.40, 2),
+        worst_case_80=round(raw_total * 1.80, 2)
     )
     
     calculation = UKCalculation(
@@ -399,6 +412,8 @@ def calculate_uk_pricing(request: UKCalculationRequest):
         fence_type=request.fence_type,
         meters=request.meters,
         gates=request.gates,
+        delivery_lead=request.delivery_lead if request.delivery_lead else request.user_name,
+        delivery_copilot=request.delivery_copilot,
         is_time_sensitive=request.is_time_sensitive,
         days_available=request.days_available,
         num_labourers=num_labourers,

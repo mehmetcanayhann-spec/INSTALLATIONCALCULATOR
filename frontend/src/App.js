@@ -89,6 +89,7 @@ const Home = ({ onLogout, onSwitchToUK }) => {
   const [archiving, setArchiving] = useState(false);
   const [selectedIds, setSelectedIds] = useState([]);
   const [deleting, setDeleting] = useState(false);
+  const [showWorstCase, setShowWorstCase] = useState(false);
 
   const [formData, setFormData] = useState({
     user_name: "",
@@ -195,6 +196,7 @@ const Home = ({ onLogout, onSwitchToUK }) => {
       gates: ""
     });
     setResult(null);
+    setShowWorstCase(false);
   };
 
   const handleSelectAll = (checked) => {
@@ -504,6 +506,31 @@ const Home = ({ onLogout, onSwitchToUK }) => {
                   <h3 className="font-heading text-lg font-bold text-slate-900 mb-3 tracking-tight">
                     Markup Options
                   </h3>
+
+                  <Button
+                    onClick={() => setShowWorstCase(!showWorstCase)}
+                    variant="outline"
+                    className={`w-full mb-4 border-2 ${showWorstCase ? 'bg-slate-100 text-slate-700' : 'text-amber-600 border-amber-200 bg-amber-50 hover:bg-amber-100'}`}
+                  >
+                    {showWorstCase ? "Hide Worst Case Scenarios" : "Show Worst Case Scenarios"}
+                  </Button>
+
+                  {showWorstCase && (
+                    <div className="space-y-3 mb-6 animate-in fade-in slide-in-from-top-4 duration-300">
+                      <div className="flex justify-between items-center bg-orange-50 border-2 border-orange-200 rounded-sm p-3">
+                        <span className="text-sm font-medium text-slate-900">Bad Case (+20%):</span>
+                        <span className="font-mono font-bold text-orange-700">£{result.breakdown.bad_case_20?.toFixed(2) || (result.breakdown.raw_total * 1.2).toFixed(2)}</span>
+                      </div>
+                      <div className="flex justify-between items-center bg-orange-100 border-2 border-orange-300 rounded-sm p-3">
+                        <span className="text-sm font-medium text-slate-900">More Bad Case (+40%):</span>
+                        <span className="font-mono font-bold text-orange-800">£{result.breakdown.more_bad_case_40?.toFixed(2) || (result.breakdown.raw_total * 1.4).toFixed(2)}</span>
+                      </div>
+                      <div className="flex justify-between items-center bg-red-100 border-2 border-red-300 rounded-sm p-3">
+                        <span className="text-sm font-medium text-slate-900">Worst Case (+80%):</span>
+                        <span className="font-mono font-bold text-red-700">£{result.breakdown.worst_case_80?.toFixed(2) || (result.breakdown.raw_total * 1.8).toFixed(2)}</span>
+                      </div>
+                    </div>
+                  )}
 
                   <div className="space-y-2 mb-6">
                     <div className="flex justify-between items-center bg-amber-50 border-2 border-amber-200 rounded-sm p-3">

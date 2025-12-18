@@ -29,9 +29,12 @@ const UKCalculator = ({ onLogout, onSwitchCalculator }) => {
   const [archiving, setArchiving] = useState(false);
   const [selectedIds, setSelectedIds] = useState([]);
   const [deleting, setDeleting] = useState(false);
+  const [showWorstCase, setShowWorstCase] = useState(false);
 
   const [formData, setFormData] = useState({
-    user_name: "",
+    user_name: "", // Keeping for backward compatibility/archive view
+    delivery_lead: "",
+    delivery_copilot: "",
     project_name: "",
     fence_type: "",
     meters: "",
@@ -72,8 +75,11 @@ const UKCalculator = ({ onLogout, onSwitchCalculator }) => {
   };
 
   const handleCalculate = async () => {
-    if (!formData.user_name || !formData.project_name || !formData.fence_type || !formData.meters || !formData.gates) {
-      toast.error("Please fill in all required fields");
+    // Start of Selection
+    const leadName = formData.delivery_lead || formData.user_name;
+
+    if (!leadName || !formData.project_name || !formData.fence_type || !formData.meters || !formData.gates) {
+      toast.error("Please fill in all required fields (Delivery Lead, Project, Type, Meters, Gates)");
       return;
     }
 
@@ -85,7 +91,9 @@ const UKCalculator = ({ onLogout, onSwitchCalculator }) => {
     setLoading(true);
     try {
       const calculationData = {
-        user_name: formData.user_name,
+        user_name: leadName, // Fallback for backend model compatibility
+        delivery_lead: formData.delivery_lead,
+        delivery_copilot: formData.delivery_copilot,
         project_name: formData.project_name,
         fence_type: formData.fence_type,
         meters: parseFloat(formData.meters),
@@ -126,6 +134,8 @@ const UKCalculator = ({ onLogout, onSwitchCalculator }) => {
   const handleReset = () => {
     setFormData({
       user_name: "",
+      delivery_lead: "",
+      delivery_copilot: "",
       project_name: "",
       fence_type: "",
       meters: "",
@@ -135,6 +145,7 @@ const UKCalculator = ({ onLogout, onSwitchCalculator }) => {
       num_labourers: ""
     });
     setResult(null);
+    setShowWorstCase(false);
   };
 
   const handleSelectAll = (checked) => {
@@ -236,17 +247,31 @@ const UKCalculator = ({ onLogout, onSwitchCalculator }) => {
               </h2>
 
               <div className="space-y-5">
-                <div>
-                  <Label htmlFor="user_name" className="text-sm font-medium text-slate-700 mb-2 block">
-                    Your Name
-                  </Label>
-                  <Input
-                    id="user_name"
-                    placeholder="Enter your name"
-                    value={formData.user_name}
-                    onChange={(e) => handleInputChange("user_name", e.target.value)}
-                    className="rounded-sm border-2 border-slate-300 focus:border-[#1E3A5F] focus:ring-0 bg-white"
-                  />
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="delivery_lead" className="text-sm font-medium text-slate-700 mb-2 block">
+                      Delivery Lead
+                    </Label>
+                    <Input
+                      id="delivery_lead"
+                      placeholder="Lead Name"
+                      value={formData.delivery_lead}
+                      onChange={(e) => handleInputChange("delivery_lead", e.target.value)}
+                      className="rounded-sm border-2 border-slate-300 focus:border-[#1E3A5F] focus:ring-0 bg-white"
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="delivery_copilot" className="text-sm font-medium text-slate-700 mb-2 block">
+                      Delivery Co-pilot
+                    </Label>
+                    <Input
+                      id="delivery_copilot"
+                      placeholder="Co-pilot Name"
+                      value={formData.delivery_copilot}
+                      onChange={(e) => handleInputChange("delivery_copilot", e.target.value)}
+                      className="rounded-sm border-2 border-slate-300 focus:border-[#1E3A5F] focus:ring-0 bg-white"
+                    />
+                  </div>
                 </div>
 
                 <div>
@@ -470,6 +495,31 @@ const UKCalculator = ({ onLogout, onSwitchCalculator }) => {
                     Markup Options
                   </h3>
 
+                  <Button
+                    onClick={() => setShowWorstCase(!showWorstCase)}
+                    variant="outline"
+                    className={`w-full mb-4 border-2 ${showWorstCase ? 'bg-slate-100 text-slate-700' : 'text-amber-600 border-amber-200 bg-amber-50 hover:bg-amber-100'}`}
+                  >
+                    {showWorstCase ? "Hide Worst Case Scenarios" : "Show Worst Case Scenarios"}
+                  </Button>
+
+                  {showWorstCase && (
+                    <div className="space-y-3 mb-6 animate-in fade-in slide-in-from-top-4 duration-300">
+                      <div className="flex justify-between items-center bg-orange-50 border-2 border-orange-200 rounded-sm p-3">
+                        <span className="text-sm font-medium text-slate-900">Bad Case (+20%):</span>
+                        <span className="font-mono font-bold text-orange-700">£{result.breakdown.bad_case_20?.toFixed(2) || (result.breakdown.raw_total * 1.2).toFixed(2)}</span>
+                      </div>
+                      <div className="flex justify-between items-center bg-orange-100 border-2 border-orange-300 rounded-sm p-3">
+                        <span className="text-sm font-medium text-slate-900">More Bad Case (+40%):</span>
+                        <span className="font-mono font-bold text-orange-800">£{result.breakdown.more_bad_case_40?.toFixed(2) || (result.breakdown.raw_total * 1.4).toFixed(2)}</span>
+                      </div>
+                      <div className="flex justify-between items-center bg-red-100 border-2 border-red-300 rounded-sm p-3">
+                        <span className="text-sm font-medium text-slate-900">Worst Case (+80%):</span>
+                        <span className="font-mono font-bold text-red-700">£{result.breakdown.worst_case_80?.toFixed(2) || (result.breakdown.raw_total * 1.8).toFixed(2)}</span>
+                      </div>
+                    </div>
+                  )}
+
                   <div className="space-y-2 mb-6">
                     <div className="flex justify-between items-center bg-amber-50 border-2 border-amber-200 rounded-sm p-3">
                       <span className="text-sm font-medium text-slate-900">+30% Markup:</span>
@@ -542,7 +592,7 @@ const UKCalculator = ({ onLogout, onSwitchCalculator }) => {
                         />
                       </th>
                       <th className="text-left py-3 px-2 font-medium text-slate-700">Date</th>
-                      <th className="text-left py-3 px-2 font-medium text-slate-700">User</th>
+                      <th className="text-left py-3 px-2 font-medium text-slate-700">Lead / Co-pilot</th>
                       <th className="text-left py-3 px-2 font-medium text-slate-700">Project</th>
                       <th className="text-left py-3 px-2 font-medium text-slate-700">Type</th>
                       <th className="text-right py-3 px-2 font-medium text-slate-700">Meters</th>
@@ -564,7 +614,14 @@ const UKCalculator = ({ onLogout, onSwitchCalculator }) => {
                         <td className="py-3 px-2 text-slate-600">
                           {new Date(calc.timestamp).toLocaleDateString()}
                         </td>
-                        <td className="py-3 px-2">{calc.user_name}</td>
+                        <td className="py-3 px-2">
+                          <div className="font-medium text-slate-900">{calc.delivery_lead || calc.user_name}</div>
+                          {calc.delivery_copilot && (
+                            <div className="text-xs text-slate-500 flex items-center gap-1">
+                              <span className="opacity-50">w/</span> {calc.delivery_copilot}
+                            </div>
+                          )}
+                        </td>
                         <td className="py-3 px-2">{calc.project_name}</td>
                         <td className="py-3 px-2">{calc.fence_type}</td>
                         <td className="py-3 px-2 text-right font-mono">{calc.meters}m</td>
